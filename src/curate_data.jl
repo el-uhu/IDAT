@@ -30,17 +30,20 @@ function update_curation(path)
   old_map_curation = readtable(joinpath(path, "map_curated_old.csv"))
   writetable(joinpath(path, "map_curated_old.csv"), old_map_curation)
   new_map_curation = new_curation(path)
-  for i in 1:size(old_map_curation)[1]
-    id = old_map_curation[i, :data_table]
-    match_in_new = findfirst(new_map_curation[:data_table], id)
-    if match_in_new != 0
-      new_map_curation[match_in_new, :imin] = old_map_curation[i, :imin]
-      new_map_curation[match_in_new, :imax] = old_map_curation[i, :imax]
-      new_map_curation[match_in_new, :tstep] = old_map_curation[i, :tstep]
-      new_map_curation[match_in_new, :comment] = old_map_curation[i, :comment]
-      new_map_curation[match_in_new, :complete] = old_map_curation[i, :complete]
-      new_map_curation[match_in_new, :curated] = old_map_curation[i, :curated]
-    end
+  old_ids = [splitdir(splitdir(id)[1])[2] *"/" * splitdir(id)[2] for id in old_map_curation[:data_table]]
+  new_ids = [splitdir(splitdir(id)[1])[2] *"/" * splitdir(id)[2] for id in new_map_curation[:data_table]]
+  common_ids = intersect(old_ids, new_ids)
+  for i in common_ids
+    match_in_new = findfirst(new_ids, i)
+    match_in_old = findfirst(old_ids, i)
+    println(match_in_new)
+    new_map_curation[match_in_new, :imin] = old_map_curation[match_in_old, :imin]
+    new_map_curation[match_in_new, :imax] = old_map_curation[match_in_old, :imax]
+    new_map_curation[match_in_new, :tstep] = old_map_curation[match_in_old, :tstep]
+    new_map_curation[match_in_new, :comment] = old_map_curation[match_in_old, :comment]
+    new_map_curation[match_in_new, :complete] = old_map_curation[match_in_old, :complete]
+    new_map_curation[match_in_new, :curated] = old_map_curation[match_in_old, :curated]
+    println(i, "\t", new_map_curation[match_in_new,:curated])
   end
   writetable(joinpath(path, "map_curated.csv"), new_map_curation)
   return(new_map_curation)
@@ -57,7 +60,7 @@ function curate!(A, i, path)
   println("...")
 
   println("Is the dataset complete? (0 = No, 1 = Yes)")
-  complete = int(split(readline(STDIN), "\n")[1])
+  complete = Int(split(readline(STDIN), "\n")[1])
   X,Y  = get_xy(D,i)
 
   for n in 1:length(Y)
@@ -69,7 +72,7 @@ function curate!(A, i, path)
   if answer == split("\n", "\n")[1]
     imax = length(Y)
   else
-    imax = int(answer)
+    imax = Int(answer)
   end
 
   println("Comments, please... (just press enter to skip)")
@@ -81,10 +84,10 @@ function curate!(A, i, path)
   println(comment, "\t", typeof(comment))
 
   D[i, :imin] = findfirst(X .>= 0)
-  D[i, :imax] = int(imax)
-  D[t, :step] = d = mean(X[2:end] - X[1:end-1])
+  D[i, :imax] = Int(imax)
+  D[i, :step] = d = mean(X[2:end] - X[1:end-1])
   D[i, :comment] = comment
-  D[i, :complete] = int(complete)
+  D[i, :complete] = Int(complete)
   D[i, :curated] = 1
   println("")
   close()

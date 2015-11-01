@@ -1,7 +1,7 @@
 
 #Check if sheet name contains pattern [A-Z][0-9][A-Z][0-9], and hence contains data
 function is_data_sheet(sheet_name::AbstractString)
-    # if typeof(match(r"[A-Z][0-9][A-Z][0-9]", sheet_name[1:4])) != Nothing
+    # if typeof(match(r"[A-Z][0-9][A-Z][0-9]", sheet_name[1:4])) != Void
     #     return(true)
     if typeof(match(r"[A-Z][0-9]", sheet_name[1:2])) != Void
         return(true)
@@ -67,12 +67,12 @@ function save_map_table(D::Dict, fname, path)
     F[:cell_id] = AbstractString[]
     F[:data_table] = AbstractString[]
     for experiment in sort([k for k in keys(D)])
-        E = O[O[:experiment] .== int(experiment[1:4]), :]
+        E = O[O[:experiment] .== parse(Int, experiment[1:4]), :]
         if D[experiment] != Dict()
           for cell in sort([k for k in keys(D[experiment])])
-            if typeof(match(r"[A-Z][0-9][0-9]", cell)) != Nothing
+            if typeof(match(r"[A-Z][0-9][0-9]", cell)) != Void
                 well = cell[1:3]
-            elseif typeof(match(r"[A-Z][0-9]", cell)) != Nothing
+            elseif typeof(match(r"[A-Z][0-9]", cell)) != Void
                 well = cell[1:2]
             else
                 println("no matching well found $cell")
