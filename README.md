@@ -1,8 +1,14 @@
 # IDAT
 Imaging Data Analysis Toolbox
 
+`IDAT` provides an interface for importing data from timecourse imaging experiments into an easily accessible simple database. It extracts data from xlsx-files using `ExcelReaders.jl` and saves timecourse data as individual csv files on a per-experiment basis. In the process of extracting, `IDAT` generates an index table (csv) that contains metadata about each timecourse and points to the storage location of each dataset. This provides an easily-accessible interface for querying and subsetting of the whole datset using logical indexing provided by the `DataFrames` package.
+
+Furthermore, `IDAT` provides functions for timecourse-analysis and plotting routines.
+
 ## Specification file
+
 To use the toolbox, provide a yaml-file containing the following fields:
+
 ```yaml
 path: "/path/to/folder/containing/excelfiles"
 key:  ".xlsx"
