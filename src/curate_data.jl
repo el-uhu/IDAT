@@ -1,24 +1,26 @@
 using PyPlot
 using DataFrames
 
+export new_curation, update_curation, curate!, curate_dataset, add_imin, add_tstep
+
 function new_curation(path)
   D = readtable(joinpath(path, "map.csv"))
-  #Add a column to DataFrame to hold information on whether data contains a complete timecourse
+  # Add a column to DataFrame to hold information on whether data contains a complete timecourse
   D[:complete] = zeros(size(D)[1])
 
-  #Add a column to DataFrame to hold information on whether where the data is to be cut off
+  # Add a column to DataFrame to hold information on whether where the data is to be cut off
   D[:imin] = zeros(size(D)[1])
 
-  #Add a column to DataFrame to hold information on whether where the data is to be cut off
+  # Add a column to DataFrame to hold information on whether where the data is to be cut off
   D[:imax] = zeros(size(D)[1])
 
-  #Add a column to DataFrame to hold information on whether where the data is to be cut off
+  # Add a column to DataFrame to hold information on whether where the data is to be cut off
   D[:tstep] = zeros(size(D)[1])
 
-  #Add a column to DataFrame to hold comments
+  # Add a column to DataFrame to hold comments
   D[:comment] = ["no comment" for i in 1:size(D)[1]]
 
-  #Add a column to DataFrame indicating whether the data has been curated
+  # Add a column to DataFrame indicating whether the data has been curated
   D[:curated] = zeros(size(D)[1])
   writetable(joinpath(path, "map_curated.csv"), D)
   return(D)

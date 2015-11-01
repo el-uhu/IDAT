@@ -110,8 +110,8 @@ function get_xy(D,i)
     imin = 1
     imax = minimum([length(dropna(x)), length(dropna(y))])
   else
-    imin = maximum([1, D[i, :imin]])
-    imax = D[i, :imax]
+    imin = round(Int, maximum([1, D[i, :imin]]))
+    imax = round(Int, D[i, :imax])
   end
   y = y[imin:imax]
   x = x[imin:imax]
