@@ -3,7 +3,7 @@
 function is_data_sheet(sheet_name::AbstractString)
     # if typeof(match(r"[A-Z][0-9][A-Z][0-9]", sheet_name[1:4])) != Nothing
     #     return(true)
-    if typeof(match(r"[A-Z][0-9]", sheet_name[1:2])) != Nothing
+    if typeof(match(r"[A-Z][0-9]", sheet_name[1:2])) != Void
         return(true)
     else
         return(false)
@@ -15,7 +15,7 @@ function get_data_sheets(sheets::Array{Any,1})
     data_sheets = AbstractString[]
     for s in sheets
         if is_data_sheet(s)
-            data_sheets = [data_sheets, [s]]
+            data_sheets = [data_sheets; [s]]
         end
     end
     return(data_sheets)
