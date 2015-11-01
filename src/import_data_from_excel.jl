@@ -32,7 +32,7 @@ function get_data(fname::AbstractString)
     excel_file = openxl(fname)
     sheets = excel_file.workbook[:sheet_names]()
     data_sheets = get_data_sheets(sheets)
-    println("\t the follwoing sheets were found $([s * ", " for s in data_sheets])")
+    println("\t the following sheets were found $([s * ", " for s in data_sheets])")
     return([s => readxl(DataFrame, excel_file, "$s\!A1:H$(get_n_rows(excel_file, s))") for s in data_sheets])
 end
 
