@@ -60,19 +60,18 @@ function curate!(A, i, path)
   println("...")
 
   println("Is the dataset complete? (0 = No, 1 = Yes)")
-  complete = Int(split(readline(STDIN), "\n")[1])
+  complete = parse(Int, split(readline(STDIN), "\n")[1])
   X,Y  = get_xy(D,i)
 
-  for n in 1:length(Y)
-    println(n,"\t",X[n], "\t",Y[n])
-  end
-
-  println("Cut-off? (press enter to take maximum)")
+  println("Cut-off time? (press enter to take maximum)")
   answer = split(readline(STDIN), "\n")[1]
   if answer == split("\n", "\n")[1]
     imax = length(Y)
   else
-    imax = Int(answer)
+    tmax = parse(Int,answer)
+    d = abs(X .- tmax)
+    imax = findfirst(d, minimum(d))
+    println("imax = ",imax, "\t t[imax] = ", X[imax])
   end
 
   println("Comments, please... (just press enter to skip)")
@@ -85,7 +84,7 @@ function curate!(A, i, path)
 
   D[i, :imin] = findfirst(X .>= 0)
   D[i, :imax] = Int(imax)
-  D[i, :step] = d = mean(X[2:end] - X[1:end-1])
+  D[i, :tstep]  = mean(X[2:end] - X[1:end-1])
   D[i, :comment] = comment
   D[i, :complete] = Int(complete)
   D[i, :curated] = 1
