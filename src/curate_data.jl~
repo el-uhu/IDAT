@@ -39,7 +39,6 @@ function update_curation(path)
     println(match_in_new)
     new_map_curation[match_in_new, :imin] = old_map_curation[match_in_old, :imin]
     new_map_curation[match_in_new, :imax] = old_map_curation[match_in_old, :imax]
-    new_map_curation[match_in_new, :i_onset] = old_map_curation[match_in_old, :i_onset]
     new_map_curation[match_in_new, :tstep] = old_map_curation[match_in_old, :tstep]
     new_map_curation[match_in_new, :comment] = old_map_curation[match_in_old, :comment]
     new_map_curation[match_in_new, :complete] = old_map_curation[match_in_old, :complete]
@@ -83,15 +82,11 @@ function curate!(A, i, path)
 
   println(comment, "\t", typeof(comment))
 
-  D[i, :imin] = findfirst(X .>= 0.9)
+  D[i, :imin] = findfirst(X .>= 0)
   D[i, :imax] = Int(imax)
   D[i, :tstep]  = mean(X[2:end] - X[1:end-1])
   D[i, :comment] = comment
   D[i, :complete] = Int(complete)
-  if complete == 1
-    ind, rss, xs, ys = find_onset(D,i)
-    D[i, :i_onset] = ind
-  end
   D[i, :curated] = 1
   println("")
   close()

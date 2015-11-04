@@ -10,7 +10,7 @@ function plot_set(D; sp = Union{}, xlim = [0,250], ylim = [0,1.2], drange = Unio
     c = D[i, :celltype]
     d = D[i, :dose_uM]
     t = D[i, :treatment]
-    x,y = get_xy(D, i)
+    x,y = get_xy(D, i, limlow = true)
     plot_cell(x, y, c, d, t, sp = sp, alpha = alpha)
   end
   # sp[:set_xlim](xlim)

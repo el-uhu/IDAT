@@ -18,6 +18,7 @@ function Spec(fname::AbstractString)
 end
 
 include("import_data_from_excel.jl")
+include("find_onset.jl")
 include("curate_data.jl")
 include("plot.jl")
 

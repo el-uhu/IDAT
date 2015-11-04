@@ -102,7 +102,9 @@ function process(specfile)
   save_map_table(D, "map.csv", S.path)
 end
 
-function get_xy(D,i)
+f(y) = findfirst(y .>= 0.9)
+
+function get_xy(D,i; limlow = f, limup = true)
   data = readtable(D[i,:data_table])
   x = data[:Time_aligned_]
   y = dropna(data[:Normalized])
@@ -112,6 +114,22 @@ function get_xy(D,i)
   else
     imin = round(Int, maximum([1, D[i, :imin]]))
     imax = round(Int, D[i, :imax])
+  end
+  if limlow == true
+    imin = imin
+  elseif typeof(limlow) == Int64
+    imin = limlow
+  elseif typeof(limlow) == Function
+    imin = limlow(y)
+  else
+    imin = 1
+  end
+  if limup == true
+    imax = imax
+  elseif typeof(limup) == Int64
+    imin = limup
+  else
+    imax = length(y[imin:end])
   end
   y = y[imin:imax]
   x = x[imin:imax]
