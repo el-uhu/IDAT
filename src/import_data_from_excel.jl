@@ -104,7 +104,7 @@ end
 
 f(y) = findfirst(y .>= 0.9)
 
-function get_xy(D,i; limlow = f, limup = true)
+function get_xy(D,i; limlow = f, limup = true, rescale = false)
   data = readtable(D[i,:data_table])
   x = data[:Time_aligned_]
   y = dropna(data[:Normalized])
@@ -133,5 +133,9 @@ function get_xy(D,i; limlow = f, limup = true)
   end
   y = y[imin:imax]
   x = x[imin:imax]
+  if rescale == true
+    bl = mean(y[end-5:end])
+    y = (y - bl)/(y[1]-bl)
+  end
   return(x,y)
 end
