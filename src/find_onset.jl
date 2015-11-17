@@ -15,16 +15,25 @@ end
 
 f(y) = findfirst(y .>= 0.9)
 
-function find_onset(D,i)
-  smoothwidth = 3
-  width = 3
-  x, y = get_xy(D, i, limlow = f);
+function find_onset(x::Array{Float64,1},y::Array{Float64,1}; smooth = true)
+  if smooth == true
+    smoothwidth = 3
+    width = 3
+    xs, ys =  smooth(x,y,smoothwidth)
+    rs = - time_derivative(xs,ys);
+    #Running mean of the rate
+    rs = Float64[mean(rs[i-width:i+width]) for i in width+1:length(rs)-width]
+  else
+    smoothwidth = 0
+    width = 0
+    rs = - time_derivative(x,y);
+    xs = x
+    ys = y
+  end
   #Smooth the data for the calculation of the rate
-  xs, ys =  smooth(x,y,smoothwidth)
+
   #Calculate the rate
-  rs = - time_derivative(xs,ys);
-  #Running mean of the rate
-  rs = Float64[mean(rs[i-width:i+width]) for i in width+1:length(rs)-width]
+
   #baseline for rescaling of the rate
   bl = mean(rs) + 1 * std(rs)
   #Rate maximum
@@ -46,3 +55,4 @@ function find_onset(D,i)
   ind =  maximum([1, i_hml + smoothwidth + width + 1])
   return(ind, rss, xs, ys)
 end
+find_onset(D::DataFrame,i::Int64) = find_onset(get_xy(D, i, limlow = f)...)

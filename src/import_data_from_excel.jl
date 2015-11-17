@@ -104,10 +104,10 @@ end
 
 f(y) = findfirst(y .>= 0.9)
 
-function get_xy(D,i; limlow = f, limup = true, rescale = false)
+function get_xy(D,i; limlow = f, limup = true, rescale = false, datatype = :Normalized)
   data = readtable(D[i,:data_table])
   x = data[:Time_aligned_]
-  y = dropna(data[:Normalized])
+  y = dropna(data[datatype])
   if D[i,:curated] == 0
     imin = 1
     imax = minimum([length(dropna(x)), length(dropna(y))])
